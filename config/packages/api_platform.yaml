@@ -1,0 +1,15 @@
+api_platform:
+    title: 'PAM! API'
+    description: '![](/pam.jpg)'
+
+    show_webby: false
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
+    defaults:
+        pagination_items_per_page: 24
+        pagination_maximum_items_per_page: 1020
+        pagination_client_items_per_page: true

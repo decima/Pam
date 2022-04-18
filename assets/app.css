@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+a:not(.no-global-style) {
+    @apply hover:text-red-500;
+    @apply cursor-pointer;
+}
+
+
