@@ -1,14 +1,21 @@
 <button
-        class="p-button"
-        class:p-button--base={base}
-        class:p-button--positive={positive}
-        class:p-button--negative={negative}
-        class:p-button--brand={brand}
-        class:p-button--link={link}
-        class:is-inline={inline}
-        class:is-dense={dense}
-        class:is-small={small}
-        class:has-icon={iconPrefix||iconSuffix}
+        class="min-w-auto px-6 p-2 text-white rounded-xl font-semibold text-{size}"
+
+        class:bg-blue-400={base||(!positive&&!negative&&!brand&&!link)}
+        class:hover:bg-blue-600={base||(!positive&&!negative&&!brand&&!link)}
+        class:bg-green-400={positive}
+        class:hover:bg-green-600={positive}
+        class:bg-red-400={negative}
+        class:hover:bg-red-600={negative}
+
+        class:bg-gray-800={brand}
+        class:hover:bg-gray-600={brand}
+
+        class:bg-white={link}
+        class:text-blue-500={link}
+        class:hover:text-blue-600={link}
+        class:underline={link}
+        class:hover:bg-white={link}
         disabled="{disabled}"
 
         on:click
@@ -20,16 +27,7 @@
         on:mouseup
 
 >
-    {#if (iconPrefix)}
-        <Icon icon="{iconPrefix}"  light></Icon>
-
-    {/if}
-    {#if $$slots.default}
-        <span><slot/></span>
-    {/if}
-    {#if (iconSuffix)}
-        <Icon icon="{iconSuffix}" light></Icon>
-    {/if}
+    <slot/>
 
 </button>
 
@@ -51,8 +49,12 @@
 
 
     /** sizes */
-    export let dense = false;
-    export let small = false;
+    export let size="md";
+    export let xs=false;
+    export let sm=false;
+    export let md=false;
+    export let lg=false;
+    export let xl=false;
 
     /** icons*/
     export let iconPrefix = false;

@@ -1,5 +1,6 @@
 import {writable} from "svelte/store";
 import {queryParameters} from "./queryParametersUtils";
+import {userPreferences} from "./userPreferences";
 
 
 async function loadData(path) {
@@ -77,7 +78,10 @@ export const AssetPage = createCurrentPage();
 
 function createAsset() {
     const {subscribe, set, update} = writable({loading: true});
-
+    let loadedUserPreferencces = {};
+    userPreferences.subscribe((data) => {
+        loadedUserPreferencces = data;
+    })
     return {
         subscribe,
         async load(id) {
@@ -88,7 +92,10 @@ function createAsset() {
         },
         async addTag(asset, tag) {
             return await postByUrl(`/api/assets/${asset}/tag`, tag)
-        }
+        },
+        async getPaginations(asset,filters){
+            return await loadByURL(`/api/assets/${asset}/siblings?${filters}`)
+        },
     }
 }
 

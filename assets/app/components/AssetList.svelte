@@ -1,6 +1,5 @@
 <Loading loaded={!$AssetPage.loading}>
 
-    <FilterBar bind:itemsPerPage={perPage} on:change={calculateFilter}></FilterBar>
     <Pagination
             hydraView={$AssetPage["hydra:view"]}
             bind:totalItems
@@ -12,11 +11,17 @@
             on:clickLast={lastPage}
     />
 
+    <div class="flex">
+        <div class="mr-2">
+            <FilterBar bind:itemsPerPage={perPage} on:change={calculateFilter} on:selectAll={()=>toggleAll(true)} on:deselectAll={()=>toggleAll(false)} on:select={tagSelection}></FilterBar>
+        </div>
+
+    </div>
+
     <Row>
         {#each $AssetPage["hydra:member"] as item}
-
             <Col>
-                <Asset item="{item}"/>
+                <AssetCard item={item} checked={allChecked} on:click={()=>{gotoAsset(item.id)}} on:check={()=>addToCheck(item)} on:uncheck={()=>removeFromCheck(item)} clickForCheck={checkOnly}/>
             </Col>
         {/each}
 
@@ -37,19 +42,42 @@
 <script>
     import Row from "../vanillaComponents/grid/Row.svelte";
     import Col from "../vanillaComponents/grid/Col.svelte";
-    import Asset from "./AssetCard.svelte";
     import {onMount} from "svelte";
-    import {AssetPage} from "../store/assets";
+    import {Asset, AssetPage} from "../store/assets";
     import {queryParameters} from "../store/queryParametersUtils";
     import Pagination from "../vanillaComponents/Paginations/Pagination.svelte";
     import Loading from "../vanillaComponents/Loading.svelte";
     import FilterBar from "./FilterBar.svelte";
     import {userPreferences} from "../store/userPreferences";
+    import {navigate} from "svelte-navigator";
+    import AssetCard from "./AssetCard.svelte";
 
     let currentPage
     let maxNumberOfPages
     let perPage
     let totalItems
+    let currentParams = {};
+    let checkedAssets = [];
+    let checkOnly = false;
+
+
+    function toggleAll(shouldCheck) {
+        if (shouldCheck) {
+            if ($AssetPage["hydra:member"].length > checkedAssets.length)
+                allChecked = false;
+            setTimeout(() => {
+                allChecked = true;
+                checkOnly = true
+            }, 10)
+        } else {
+            if (checkedAssets.length > 0)
+                allChecked = true;
+            setTimeout(() => {
+                allChecked = false;
+                checkOnly = false
+            }, 10)
+        }
+    }
 
     export let filters = {};
     AssetPage.subscribe(async (state) => {
@@ -68,14 +96,17 @@
         params = {...params, ...filters}
         perPage = $userPreferences.itemsPerPage;
         params.itemsPerPage = params.itemsPerPage || perPage;
+        currentParams = params;
         AssetPage.load(params)
 
     })
 
     function changeURL(newURL) {
         const params = queryParameters.parseUrl(newURL)
+        currentParams = params;
         delete params["category[]"];
         queryParameters.navigate(params)
+        setTimeout(() => toggleAll(false), 10)
     }
 
     async function previousPage() {
@@ -86,6 +117,18 @@
     async function nextPage() {
         const newURL = await AssetPage.nextPage()
         changeURL(newURL)
+
+    }
+
+    async function tagSelection(event) {
+        const tag = event.detail.trim();
+        if (tag.length > 0) {
+            for (let i = 0; i < checkedAssets.length; i++) {
+                await Asset.addTag(checkedAssets[i].id, tag)
+            }
+        }
+        alert(`Tag ${tag} added to ${checkedAssets.length} assets`)
+        toggleAll(false);
 
     }
 
@@ -106,4 +149,26 @@
         params.itemsPerPage = perPage
         AssetPage.load(params)
     }
+
+    function gotoAsset(id) {
+        const str = queryParameters.stringify(currentParams)
+
+        navigate(`/asset/${id}?${str}`);
+    }
+
+    function addToCheck(item) {
+        console.log("ADD TO CHECK")
+        checkedAssets = [...checkedAssets, item];
+        checkOnly = true;
+    }
+
+    function removeFromCheck(item) {
+        checkedAssets = checkedAssets.filter(i => i.id !== item.id);
+        if (checkedAssets.length === 0) {
+            checkOnly = false;
+        }
+
+    }
+
+    let allChecked = false;
 </script>

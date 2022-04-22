@@ -4,7 +4,7 @@
     import TreeLeaf from "./TreeLeaf.svelte";
 
     export let title = "";
-    export let open = true;
+    export let open = false;
 </script>
 
 <li>

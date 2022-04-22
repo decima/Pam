@@ -8,4 +8,8 @@ a:not(.no-global-style) {
     @apply cursor-pointer;
 }
 
+#app{
+@apply bg-gray-100;
+}
+
 

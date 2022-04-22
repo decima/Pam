@@ -2,7 +2,7 @@
 
 namespace App\Services\Media\Utils\Exceptions;
 
-class UnsupportedFileFormatException
+class UnsupportedFileFormatException extends \Exception
 {
 
 }

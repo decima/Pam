@@ -1,12 +1,10 @@
 <Router>
-
-
-    <div class="flex w-full">
-        <div class="w-96 h-screen shadow">
+    <div class="min-h-screen flex flex-row flex-auto flex-shrink-0 antialiased bg-slate-200 text-slate-800">
+        <div class="w-96 bg-white border-r h-screen sticky top-0">
             <Navbar></Navbar>
         </div>
 
-        <main class="w-full mx-4">
+        <main class="w-full  bg-white  m-10 p-10 rounded-lg shadow">
             <Route path="/">
             </Route>
             <Crud domain="category"
@@ -19,6 +17,11 @@
                   view="{Asset.View}"
                   list="{Asset.List}"
                   create="{Asset.Create}"/>
+            <Crud domain="tag"
+                  edit="{Tag.List}"
+                  view="{Tag.View}"
+                  list="{Tag.List}"
+                  create="{Tag.List}"/>
         </main>
     </div>
 </Router>
@@ -28,6 +31,7 @@
     import {Route, Router} from "svelte-navigator";
     import Category from "./routes/Category/actions.js";
     import Asset from "./routes/Assets/actions.js";
+    import Tag from "./routes/Tag/actions.js";
     import Crud from "./routes/default/Crud.svelte";
     import Navbar from "./components/Navbar.svelte";
 </script>

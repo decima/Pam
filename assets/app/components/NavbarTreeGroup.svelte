@@ -14,8 +14,6 @@
     import TreeGroup from "../vanillaComponents/Tree/TreeGroup.svelte";
     import TreeLeaf from "../vanillaComponents/Tree/TreeLeaf.svelte";
     import NavbarTreeGroup from "./NavbarTreeGroup.svelte";
-    import Button from "../vanillaComponents/Button.svelte";
-    import Icon from "../vanillaComponents/Icon.svelte";
     import {navigate} from "svelte-navigator";
 
     export let category = {name: "", children: []};

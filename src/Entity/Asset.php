@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\MongoDbOdm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\AssetController;
+use App\Controller\Operations\Asset\SiblingsController;
 use App\Repository\AssetRepository;
 use App\Services\Media\Utils\StoredMedia;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,11 +18,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
 #[ApiResource(
+    collectionOperations: [
+        "get",
+        "post",
+        'siblings' => [
+            "normalization_context" => ['groups' => ['siblings']],
+            'pagination_enabled' => false,
+            'method' => 'GET',
+            'formats' => ['json'],
+            'path' => '/assets/{asset}/siblings.{_format}',
+            'controller' => "\\App\\Controller\\AssetController::siblings",
+            'openapi_context' => [
+                'parameters' => [
+                    [
+                        'name' => "asset",
+                        'in' => 'path',
+                        "description" => "The Asset in order to get its siblings"
+                    ]
+                ],
+            ],
+        ]
+    ],
+    itemOperations: [
+        'get',
+        'put',
+        'delete',
+    ],
     denormalizationContext: ['groups' => ['writeAsset']],
-    normalizationContext: ['groups' => ['readAsset', "nested",'commons']],
-)]
-#[ApiFilter(SearchFilter::class, properties: ['category'=>'exact'])]
+    normalizationContext: ['groups' => ['readAsset', "nested", 'commons']]
+), ApiFilter(SearchFilter::class, properties: ['category' => 'exact','tags.id'=>'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['name'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(RangeFilter::class, properties: ["id"])]
+#[ApiFilter(OrderFilter::class, properties: ["id" => "DESC"])]
 class Asset extends BaseEntity
 {
 

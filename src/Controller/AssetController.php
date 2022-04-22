@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\Tag;
+use App\Repository\AssetRepository;
 use App\Repository\TagRepository;
 use App\Services\Media\Storage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,33 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("/api/assets")]
 class AssetController extends AbstractController
 {
+    public function siblings(array $data, Asset $asset)
+    {
+        $previous = null;
+        $next = null;
+        $found = false;
+        $currentIndex = null;
+
+        foreach ($data as $index => $assetToCheck) {
+            if ($found) {
+                $next = $assetToCheck;
+                break;
+            }
+            if ($assetToCheck->getId() !== $asset->getId()) {
+                $previous = $assetToCheck;
+                continue;
+            }
+            $found = true;
+            $currentIndex = $index;
+        }
+
+        return $this->json([
+            "previous" => $previous,
+            "next" => $next,
+            "total" => count($data),
+            "currentIndex" => $currentIndex
+        ]);
+    }
 
     #[Route("/{asset}/show")]
     public function show(Asset $asset, Storage $storage)
@@ -54,11 +82,12 @@ class AssetController extends AbstractController
     }
 
     #[Route("/{asset}/tag", methods: ["POST"])]
-    public function addTag(Asset                  $asset,
-                           Request                $request,
-                           TagRepository          $tagRepository,
-                           EntityManagerInterface $entityManager)
-    {
+    public function addTag(
+        Asset $asset,
+        Request $request,
+        TagRepository $tagRepository,
+        EntityManagerInterface $entityManager
+    ) {
         $tagName = $request->getContent();
         $tag = $tagRepository->findOneBy(["name" => $tagName]);
         if ($tag === null) {
