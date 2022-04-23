@@ -2,7 +2,9 @@
    class:no-global-style={styleDisabled||disabled}
    class:border-transparent={!active}
    class:border-red-500={active}
-   class:text-gray-300={disabled}
+   class:dark:border-green-500 ={active}
+   class:text-slate-300={disabled}
+   class:dark:text-slate-600={disabled}
    class:cursor-not-allowed={disabled}
    on:click={()=>{!disabled?dispatch("click"):""}}>
     <slot/>

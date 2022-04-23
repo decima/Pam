@@ -9,6 +9,7 @@
     import {queryParameters} from "../../store/queryParametersUtils";
     import AutocompleteInput from "../../vanillaComponents/Autocomplete/AutocompleteInput.svelte";
     import {tags} from "../../store/tags";
+    import AutocompleteTagInput from "../../components/AutocompleteTagInput.svelte";
 
     let tagInput;
     export let id;
@@ -35,9 +36,9 @@
     }
 
     async function addTag(event) {
-        const tag = event.detail
-        if (tag.trim().length > 0) {
-            await Asset.addTag(id, tag.trim())
+        const tagElement = event.detail
+        if (tagElement.value.trim().length > 0) {
+            await Asset.addTag(id, tagElement.value.trim())
             await Asset.load(id)
         }
 
@@ -76,13 +77,13 @@
     }
 
     function viewTag(tag) {
-        navigate(`/tag/${tag}`)
+        navigate(`/tags/${tag}`)
     }
 
     function gotoNext() {
         if (pagination.next != null) {
 
-            navigate('/asset/' + pagination?.next?.id + "?" + queryParameters.stringify(currentParams))
+            navigate('/assets/' + pagination?.next?.id + "?" + queryParameters.stringify(currentParams))
         }
     }
 
@@ -92,12 +93,17 @@
 
     function gotoPrevious() {
         if (pagination.previous != null) {
-            navigate('/asset/' + pagination?.previous?.id + "?" + queryParameters.stringify(currentParams))
+            navigate('/assets/' + pagination?.previous?.id + "?" + queryParameters.stringify(currentParams))
         }
     }
 
     async function suggestTag(inputUsed) {
-        return await tags.autocomplete(inputUsed);
+        const r =  await tags.autocomplete(inputUsed);
+        let result = [];
+        for (let i = 0; i < r["hydra:member"].length; i++) {
+            result.push(r["hydra:member"][i].name)
+        }
+        return result;
     }
 
     let newTag = "";
@@ -107,7 +113,6 @@
 
 <div class="border w-1/3 mx-auto my-6">
     <img class="mx-auto" src="/api/assets/{id}/show"/>
-
 </div>
 
 <div class="mx-auto w-1/3">
@@ -125,13 +130,17 @@
         </h1>
         <p>{$Asset.category.name}</p>
         {#each $Asset.tags as tag}
-            <Tag color={tag.color} on:click={()=>{viewTag(tag.id)}}>{tag.name}
+            <Tag color={tag.color} foregroundColor={tag.foregroundColor} on:click={()=>{viewTag(tag.id)}}>{tag.name}
                 <span slot="after" on:click={()=>{detachTag(tag)}}><Icon icon="xmark"/></span>
             </Tag>
         {/each}
         <span class="border p-2">
         <Icon icon="tag"/>
-        <AutocompleteInput placeholder="add tag" bind:this={tagInput} autocompletion={suggestTag} on:select={addTag} bind:value={newTag} on:blur={()=>{enableFullKeyboardUsage=false}} on:focus={()=>{enableFullKeyboardUsage=true}}/>
+
+
+            <AutocompleteTagInput bind:tagInput on:select={addTag}  bind:newTag bind:enableFullKeyboardUsage />
+
+
         </span>
     </Loading>
 </div>

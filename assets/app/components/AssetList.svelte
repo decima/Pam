@@ -121,13 +121,13 @@
     }
 
     async function tagSelection(event) {
-        const tag = event.detail.trim();
-        if (tag.length > 0) {
+        const tag = event.detail;
+        if (tag.value.trim().length > 0) {
             for (let i = 0; i < checkedAssets.length; i++) {
-                await Asset.addTag(checkedAssets[i].id, tag)
+                await Asset.addTag(checkedAssets[i].id, tag.value.trim())
             }
         }
-        alert(`Tag ${tag} added to ${checkedAssets.length} assets`)
+        alert(`Tag ${tag.value} added to ${checkedAssets.length} assets`)
         toggleAll(false);
 
     }
@@ -153,11 +153,10 @@
     function gotoAsset(id) {
         const str = queryParameters.stringify(currentParams)
 
-        navigate(`/asset/${id}?${str}`);
+        navigate(`/assets/${id}?${str}`);
     }
 
     function addToCheck(item) {
-        console.log("ADD TO CHECK")
         checkedAssets = [...checkedAssets, item];
         checkOnly = true;
     }

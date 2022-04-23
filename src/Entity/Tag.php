@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\ApiPlatform\Filters\AssetsCountFilter;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,8 +13,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [],
+        'post'
+    ]
+)]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'word_start'])]
+#[ApiFilter(AssetsCountFilter::class, properties: ['tags' => 'count'])]
 class Tag extends BaseEntity
 {
 
@@ -31,6 +38,7 @@ class Tag extends BaseEntity
 
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'tags')]
     private $categories;
+
 
     public function __construct()
     {
@@ -117,4 +125,14 @@ class Tag extends BaseEntity
         return $this;
     }
 
+
+    public function getForegroundColor()
+    {
+        $color = $this->getColor();
+        [$red, $green, $blue] = sscanf($color, "#%02x%02x%02x");
+        $luminance = ($red * 0.2126) + ($green * 0.7152) + ($blue * 0.0722);
+        $newColor = ($luminance>179) ? "#000000" : "#ffffff";
+        dump(sprintf('color %s, luminance %s, new color %s', $color, $luminance, $newColor));
+        return $newColor;
+    }
 }

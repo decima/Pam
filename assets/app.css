@@ -4,12 +4,17 @@
 @tailwind screens;
 
 a:not(.no-global-style) {
-    @apply hover:text-red-500;
+    @apply hover:text-red-500 dark:hover:text-green-500;
     @apply cursor-pointer;
 }
 
-#app{
-@apply bg-gray-100;
+#app {
+    @apply bg-slate-100;
+    @apply dark:bg-slate-600;
 }
 
+input,select{
+    @apply bg-white;
+    @apply dark:bg-gray-700;
+}
 

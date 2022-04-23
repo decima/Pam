@@ -14,7 +14,7 @@
 
 
 <div class="flex flex-col items-center my-6">
-    <div class="flex text-gray-700">
+    <div class="flex text-slate-700 dark:text-slate-100">
         <div class="h-8 w-8 mr-1 flex justify-center items-center  cursor-pointer">
 
             <PaginationItem on:click={()=>{dispatch("clickPrevious")}}

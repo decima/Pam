@@ -2,11 +2,10 @@
        class="outline-0"
        on:focus={onFocus} on:keydown={keyboardActions} on:blur on:input={updateSuggestion}/>
 {#if value.trim() && currentItem > -1 && suggestions.length > 0}
-    <ul class="shadow border absolute w-96">
-
+    <ul class="shadow border absolute w-96 bg-white dark:bg-black">
         {#each suggestions as suggestion, i}
-            <li class="border-t hover:bg-blue-400" on:click={()=>{chooseValue(suggestion)}} class:selected={currentItem===i}>
-                {suggestion}
+            <li class="border-t hover:bg-blue-400 " on:click={()=>{chooseValue(suggestion)}} class:selected={currentItem===i}>
+                {suggestion.value}
             </li>
         {/each}
     </ul>
@@ -23,6 +22,7 @@
     let currentItem = 0;
     let suggestions = [];
     let inputField = null;
+    let currentKey=-1;
 
     export let value = '';
     export let placeholder = 'type something...';
@@ -56,7 +56,14 @@
             suggestions = [];
             return;
         }
-        suggestions = await autocompletion(value.trim());
+        suggestions=[];
+        const results = await autocompletion(value.trim());
+        let list=[];
+        for(let id in results) {
+
+            list.push({"key":id,"value":results[id]});
+        }
+        suggestions=list;
     }
 
     function chooseValue(selected) {
@@ -67,7 +74,7 @@
     }
 
     function sendValue(v) {
-        dispatcher('select', v.trim())
+        dispatcher('select', v)
         value = ''
         currentItem = -1;
     }
@@ -79,7 +86,7 @@
                     currentItem = -1;
                 }
                 if (currentItem === -1) {
-                    sendValue(value)
+                    sendValue({key: currentKey, value:value.trim()})
                 } else {
                     sendValue(suggestions[currentItem])
                 }
@@ -88,10 +95,12 @@
                 break;
             case "ArrowRight":
                 if (currentItem > -1 && suggestions.length > 0) {
-                    value = suggestions[currentItem]
+                    value = suggestions[currentItem].value
+                    currentKey = suggestions[currentItem].key
                     currentItem = -1;
                     event.preventDefault()
                 }
+                dispatcher('right',{key: currentKey, value:value.trim()})
                 break;
             case "ArrowDown":
                 if (currentItem < suggestions.length - 1) {
@@ -110,6 +119,7 @@
             case "Escape":
                 setTimeout(() => {
                     currentItem = -1;
+                    currentKey=-1;
                 }, 50)
                 event.preventDefault()
                 inputField.focus()

@@ -15,7 +15,8 @@
     </div>
     <div class="border-x border-y px-2 py-2">
         <Icon icon="tag"/>
-        <AutocompleteInput placeholder="tag selected" on:select/>
+        <AutocompleteTagInput on:select />
+
     </div>
 
 </div>
@@ -24,6 +25,7 @@
     import {userPreferences} from "../store/userPreferences";
     import AutocompleteInput from "../vanillaComponents/Autocomplete/AutocompleteInput.svelte";
     import Icon from "../vanillaComponents/Icon.svelte";
+    import AutocompleteTagInput from "./AutocompleteTagInput.svelte";
 
     const dispatch = createEventDispatcher();
 
