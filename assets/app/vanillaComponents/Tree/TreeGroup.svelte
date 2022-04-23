@@ -12,7 +12,7 @@
         <TreeLeaf on:click>
             {title}
         </TreeLeaf>
-        <a on:click="{()=>{open=!open}}" class="text-red-400 cursor-pointer pl-1 pr-2">
+        <a on:click="{()=>{open=!open}}" class=" cursor-pointer pl-1 pr-2">
             {#if open}
                 <Icon icon="chevron-down"/>
             {:else}
