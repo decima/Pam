@@ -4,7 +4,17 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-  storage.dir: '%kernel.project_dir%/media/storage'
+  env(STORAGE_PATH): '%kernel.project_dir%/media/storage'
+  env(S3_VERSION): latest
+  storage.dir: "%env(STORAGE_PATH)%"
+  s3:
+    version: "%env(S3_VERSION)%"
+    region: "%env(S3_REGION)%"
+    credentials:
+      key: "%env(S3_KEY)%"
+      secret: "%env(S3_SECRET)%"
+    endpoint: "%env(S3_ENDPOINT)%"
+    use_path_style_endpoint: true
 services:
   # default configuration for services in *this* file
   _defaults:
@@ -21,3 +31,6 @@ services:
       $storageDir: '%storage.dir%'
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
+  Aws\S3\S3Client:
+    arguments:
+      - "%s3%"

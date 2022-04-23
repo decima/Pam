@@ -17,20 +17,24 @@
 
 </script>
 {#if tag}
-    <div class="w-full flex  justify-between	" style="border-bottom-color: {tag.color}; color: {tag.color}; background-color:{tag.foregroundColor}; ">
-        <h2 class="uppercase">
-            <label class="text-5xl ">{tag.name}</label>
+
+    <div class="flex  justify-between  rounded-full h-10 w-1/3	" style="color: {tag.color}; ">
+        <label class=" rounded-l-full grow" style="background-color:{tag.color};">
+            <input type="color" bind:value={tag.color}
+                   class=" w-0 h-0 opacity-0"
+                   on:change={updateTagColor}>
+        </label>
+        <h2 class="capitalize text-2xl mx-8 ">{tag.name}
 
         </h2>
-        <label class="flex hover:brightness-125 cursor-pointer" style="background-color:{tag.color};">
+        <label class=" hover:brightness-125 cursor-pointer rounded-r-full grow" style="background-color:{tag.color};">
+
+
+
             <input type="color" bind:value={tag.color}
-                   class="w-5 h-6 absolute opacity-0"
+                   class=" w-0 h-0 opacity-0"
                    on:change={updateTagColor}>
 
-            <svg width="192" height="100" viewBox="180 0 192 265" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M149 265C46.5 90.5 283.5 174.5 149 0.5H0V265H149Z" fill={tag.foregroundColor}/>
-            </svg>
-            <span class="mx-2 my-2" style="color:{tag.foregroundColor}">change color</span>
         </label>
     </div>
 

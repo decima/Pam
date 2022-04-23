@@ -3,6 +3,7 @@
 namespace App\Services\Media;
 
 use App\Services\Media\Utils\StoredMedia;
+use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -16,11 +17,12 @@ class Storage
     private Filesystem $filesystem;
 
 
-    public function __construct(readonly public string $storageDir)
+    public function __construct(readonly public string $storageDir, public S3Client $s3Client)
     {
+        $this->s3Client->registerStreamWrapper();
         $this->filesystem = new Filesystem();
         if ($this->filesystem->exists($storageDir) === false) {
-            $this->filesystem->mkdir($storageDir);
+            @$this->filesystem->mkdir($storageDir);
         }
     }
 
@@ -38,6 +40,7 @@ class Storage
 
     public function store(string $content): StoredMedia
     {
+
         $signature = $this->sign($content);
         $destination = $this->createDestinationFromSignature($signature);
 
@@ -46,14 +49,14 @@ class Storage
             return new StoredMedia($destination, $signature);
         }
 
-        $this->filesystem->dumpFile($destination, $content);
+        @mkdir(dirname($destination), 0777, true);
+        file_put_contents($destination, $content);
         return new StoredMedia($destination, $signature);
     }
 
     public function read($path): string
     {
         return file_get_contents($path);
-
     }
 
 

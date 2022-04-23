@@ -31,6 +31,7 @@ class ImportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+
         $io = new SymfonyStyle($input, $output);
         $directory = $input->getArgument('directory');
         $io->info(sprintf('Processing import from %s', $directory));

@@ -11,7 +11,7 @@ This is a work-in-progress project and still have a lot to do. Here are the expe
 - [x] group by tags 
 - [ ] crud categories
 - [x] crud tags
-- [ ] S3 media storage
+- [x] S3 media storage
 - [ ] import from browser
 - [ ] more awesome features...
 - [ ] ML classify helper?
