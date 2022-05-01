@@ -16,9 +16,10 @@ class AssetsCountFilter extends AbstractContextAwareFilter implements SearchFilt
     {
         if ($property === 'order' && isset($value['assets'])) {
             $queryBuilder
+                ->addSelect('COUNT(DISTINCT a.id) AS HIDDEN assets_count')
                 ->innerJoin('o.assets' , 'a')
                 ->groupBy('o')
-                ->orderBy("COUNT(a.id)", $value["assets"]);
+                ->orderBy("assets_count", $value["assets"]);
         }
 
     }

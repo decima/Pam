@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'post'
     ]
 )]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'word_start'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'iword_start'])]
 #[ApiFilter(AssetsCountFilter::class, properties: ['tags' => 'count'])]
 class Tag extends BaseEntity
 {
@@ -132,7 +132,6 @@ class Tag extends BaseEntity
         [$red, $green, $blue] = sscanf($color, "#%02x%02x%02x");
         $luminance = ($red * 0.2126) + ($green * 0.7152) + ($blue * 0.0722);
         $newColor = ($luminance>179) ? "#000000" : "#ffffff";
-        dump(sprintf('color %s, luminance %s, new color %s', $color, $luminance, $newColor));
         return $newColor;
     }
 }

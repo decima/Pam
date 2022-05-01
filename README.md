@@ -1,11 +1,11 @@
 # PAM - Personal Assets Management
 
-![](./public/pam.jpg)
+![](./public/logo.png)
 
 Pam is a tool for sort and view assets.
 
 
-This is a work-in-progress project and still have a lot to do. Here are the expected features : 
+This is a work-in-progress project and still have a lot to do. Here are the expected features: 
 - [x] automatic import from folder
 - [x] group by categories
 - [x] group by tags 
@@ -14,7 +14,7 @@ This is a work-in-progress project and still have a lot to do. Here are the expe
 - [x] S3 media storage
 - [ ] import from browser
 - [ ] more awesome features...
-- [ ] ML classify helper?
+- [ ] ML classification helper?
 
 
 ## Getting started

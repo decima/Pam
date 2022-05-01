@@ -49,7 +49,6 @@ class AssetController extends AbstractController
     #[Route("/{asset}/show")]
     public function show(Asset $asset, Storage $storage)
     {
-        /** @noinspection PhpUnnecessaryLocalVariableInspection */
         $response = new Response(
             $storage->read($asset->getPath()),
             headers: [
@@ -57,7 +56,7 @@ class AssetController extends AbstractController
             ]
         );
         $response->setPublic();
-        $response->setMaxAge(3600);
+        $response->setMaxAge(864000);
 
         // (optional) set a custom Cache-Control directive
         $response->headers->addCacheControlDirective('must-revalidate', true);

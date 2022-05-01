@@ -50,7 +50,7 @@ class Storage
         }
 
         @mkdir(dirname($destination), 0777, true);
-        file_put_contents($destination, $content);
+        @file_put_contents($destination, $content);
         return new StoredMedia($destination, $signature);
     }
 

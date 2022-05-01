@@ -9,6 +9,7 @@ use App\Services\Media\Utils\Exceptions\DirectoryException;
 use App\Services\Media\Utils\Exceptions\UnsupportedFileFormatException;
 use App\Services\Utils\MimeTypeUtility;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -23,15 +24,21 @@ class Importer
     public CategoryManager $categoryManager;
     #[Required]
     public AssetRepository $assetRepository;
-
+    #[Required]
+    public LoggerInterface $logger;
     #[Required]
     public MimeTypeUtility $mimeTypeUtility;
 
     public function import(string $path): bool
     {
         $files = $this->scanFolder($path);
+        $startedProcessingMessageSent=false;
         $batchFlush = 0;
         foreach ($files as $file) {
+            if(!$startedProcessingMessageSent){
+                $this->logger->info('Started processing files');
+                $startedProcessingMessageSent=true;
+            }
             try {
                 $asset = $this->createAsset($file);
             } catch (DirectoryException $directoryException) {

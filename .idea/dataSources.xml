@@ -20,5 +20,12 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="PostgreSQL - postgres@h91.co" uuid="1ad2589a-066b-4b4a-9b07-c1fa614eb4ab">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://h91.co:15432/app</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

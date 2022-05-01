@@ -34,18 +34,16 @@ class ImportCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
         $directory = $input->getArgument('directory');
-        $io->info(sprintf('Processing import from %s', $directory));
 
         $loop = $input->getOption('loop');
         do {
-            echo "RUNNING\n";
             $this->mediaManager->import($directory);
             if ($loop) {
                 sleep($input->getOption('cool-down'));
             }
         } while ($loop);
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('Imported');
 
         return Command::SUCCESS;
     }

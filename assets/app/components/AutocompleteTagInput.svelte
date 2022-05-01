@@ -2,8 +2,8 @@
     import AutocompleteInput from "../vanillaComponents/Autocomplete/AutocompleteInput.svelte";
     import {tags} from "../store/tags";
 
-    export let tagInput;
-    export let newTag;
+    export let tagInput=null;
+    export let newTag="";
     export let enableFullKeyboardUsage = false;
     export let placeholder="Add tag...";
 

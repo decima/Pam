@@ -3,7 +3,7 @@
    class:fa-solid={solid}
    class:fa-light={light}
    class:fa-thin={thin}
-   class:fa-brand={brand}
+   class:fa-brands={brand||brands}
    class:fa-duotone={duotone}
    class:fa-inverse={inverse}
 
@@ -31,6 +31,7 @@
     export let light = false
     export let thin = false
     export let brand = false
+    export let brands = false
     export let duotone = false
     export let inverse = false
     export let size = 1
